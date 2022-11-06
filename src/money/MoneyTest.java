@@ -4,7 +4,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import org.junit.internal.runners.SuiteMethod;
 
 public class MoneyTest {
   @Test
@@ -29,9 +28,6 @@ public class MoneyTest {
 
   @Test
   public void testSimpleAddition() {
-    // Money sum = Money.dollar(5).plus(Money.dollar(5));
-    // assertEquals(Money.dollar(10), sum);
-
     Money five = Money.dollar(5);
     Expression sum = five.plus(five);
     Bank bank = new Bank();
@@ -62,4 +58,18 @@ public class MoneyTest {
     Money result = bank.reduce(Money.dollar(1), "USD");
     assertEquals(Money.dollar(1), result);
   }
+
+  @Test
+  public void testIdentityRate() {
+    assertEquals(1, new Bank().rate("USD", "USD"));
+  }
+
+  @Test
+  public void testReduceMoneyDifferentCurrency() {
+    Bank bank = new Bank();
+    bank.addRate("CHF", "USD", 2);
+    Money result = bank.reduce(Money.franc(2), "USD");
+    assertEquals(Money.dollar(1), result);
+  }
+
 }
